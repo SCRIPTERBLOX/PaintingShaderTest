@@ -1,39 +1,38 @@
 shader_type canvas_item;
 
 uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
-uniform sampler2D shape_mask : repeat_disable, filter_linear;
-uniform int diagonal_square_radius = 0;
+uniform vec3[50] allowed_colors; // Array of allowed colors
 
-vec4 get_pixel_color(vec2 uv) {return textureLod(screen_texture, uv, 0.0);}
-float randf (vec2 st) {return fract(sin(dot(st.xy, vec2(12.9898,78.233)))*43758.5453123);}
+vec4 get_pixel_color(vec2 uv) {return textureLod(screen_texture, uv, 0.0); }
+
+float color_distance_squared(vec3 color_a, vec3 color_b) {
+	return dot(color_a - color_b, color_a - color_b);
+}
 
 void fragment() {
-	if (SCREEN_UV.r < 0.5) { // Pixel is inside the shape (white area)
-		vec4 this_color = get_pixel_color(SCREEN_UV);
+	if (SCREEN_UV.x < 0.5) { // Pixel is in the left side
+		vec4 current_color = get_pixel_color(SCREEN_UV);
+		vec3 current_rgb = current_color.rgb;
 
-		vec4[] colors = {this_color};
+		vec3 closest_allowed_color = vec3(0.0);
+		float min_distance_sq = 1000000.0; // Initialize with a large value
 
-		vec2 start_pos = SCREEN_UV - vec2(float(-diagonal_square_radius), float(-diagonal_square_radius));
+		// Find the closest allowed color
+		if (allowed_colors.length() > 0) {
+			closest_allowed_color = allowed_colors[0]; // Initialize with the first color
+			min_distance_sq = color_distance_squared(current_rgb, closest_allowed_color.rgb);
 
-		for (int x = 0; x < diagonal_square_radius*2; x++) {
-			for (int y = 0; y < diagonal_square_radius*2; y++) {
-				vec2 pixel_position = vec2(float(x), float(y));
-				vec4 col = get_pixel_color(pixel_position);
-
-				float col_r = col.r;
-				float col_g = col.g;
-				float col_b = col.b;
-
-				vec4 total_col;
-
-				for (int i = 0; i < colors.length(); i++) {
-					total_col += colors[i];
+			for (int i = 1; i < allowed_colors.length(); ++i) {
+				vec3 allowed = allowed_colors[i];
+				float dist_sq = color_distance_squared(current_rgb, allowed.rgb);
+				if (dist_sq < min_distance_sq) {
+					min_distance_sq = dist_sq;
+					closest_allowed_color = allowed;
 				}
-
-				vec4 average_col = vec4(total_col.r / float(colors.length()), total_col.g / float(colors.length()), total_col.b / float(colors.length()), 1);
-
-				COLOR = average_col;
 			}
+			COLOR.rgb = closest_allowed_color; // Set the pixel color to the closest allowed color
 		}
-	} else {COLOR = get_pixel_color(SCREEN_UV); /* Left side */}
+	} else {
+		COLOR = get_pixel_color(SCREEN_UV); // Right side
+	}
 }
