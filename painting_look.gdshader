@@ -1,12 +1,13 @@
 shader_type canvas_item;
 
-uniform vec2 size = vec2(32.0, 28.0);
+uniform vec2 size = vec2(12.0, 12.0);
 // If you intend to read from mipmaps with `textureLod()` LOD values greater than `0.0`,
 // use `filter_nearest_mipmap` instead. This shader doesn't require it.
 uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
 
 void fragment() {
-        vec2 norm_size = size * SCREEN_PIXEL_SIZE;
+	if (SCREEN_UV.x < 0.5) {
+        vec2 norm_size = vec2(20, 20) * SCREEN_PIXEL_SIZE;
         bool less_than_half = mod(SCREEN_UV.y / 2.0, norm_size.y) / norm_size.y < 0.5;
         vec2 uv = SCREEN_UV + vec2(norm_size.x * 0.5 * float(less_than_half), 0.0);
         vec2 center_uv = floor(uv / norm_size) * norm_size;
@@ -22,6 +23,9 @@ void fragment() {
                          float(norm_uv.y < 0.3333333) * float(norm_uv.y / 0.3333333 < (abs(norm_uv.x - 0.5) * 2.0)));
 
         COLOR = textureLod(screen_texture, center_uv, 0.0);
+	} else {
+		COLOR = textureLod(screen_texture, SCREEN_UV, 1);
+	}
 }
 //void light() {
 //	// Called for every pixel for every light affecting the CanvasItem.
