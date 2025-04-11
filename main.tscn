@@ -1,13 +1,17 @@
-[gd_scene load_steps=6 format=3 uid="uid://do1p0nag3j6kf"]
+[gd_scene load_steps=7 format=3 uid="uid://do1p0nag3j6kf"]
 
 [ext_resource type="Shader" uid="uid://o3vrcpof8vo2" path="res://painting_look.gdshader" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://dqds3u5urrfti" path="res://character_controler.gd" id="2_0xm2m"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0xm2m"]
+albedo_color = Color(0.285111, 0.00601577, 1, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_7dm0k"]
+material = SubResource("StandardMaterial3D_0xm2m")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0xm2m"]
 shader = ExtResource("1_ig7tw")
-shader_parameter/size = Vector2(12, 12)
+shader_parameter/diagonal_square_radius = 5
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_h2yge"]
 
