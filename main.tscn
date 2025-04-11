@@ -1,25 +1,51 @@
-[gd_scene load_steps=7 format=3 uid="uid://do1p0nag3j6kf"]
+[gd_scene load_steps=13 format=3 uid="uid://do1p0nag3j6kf"]
 
+[ext_resource type="Shader" uid="uid://d3c7886134mtw" path="res://distortion.gdshader" id="1_0xm2m"]
 [ext_resource type="Shader" uid="uid://o3vrcpof8vo2" path="res://painting_look.gdshader" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://dqds3u5urrfti" path="res://character_controler.gd" id="2_0xm2m"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0xm2m"]
-albedo_color = Color(0.285111, 0.00601577, 1, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h2yge"]
+albedo_color = Color(1, 0, 0, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_7dm0k"]
-material = SubResource("StandardMaterial3D_0xm2m")
+material = SubResource("StandardMaterial3D_h2yge")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lquwl"]
+albedo_color = Color(0, 1, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7mycd"]
+material = SubResource("StandardMaterial3D_lquwl")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1bvp3"]
+albedo_color = Color(0, 0, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lquwl"]
+material = SubResource("StandardMaterial3D_1bvp3")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0xm2m"]
 shader = ExtResource("1_ig7tw")
-shader_parameter/diagonal_square_radius = 5
+shader_parameter/allowed_colors = PackedVector3Array(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0.2, 0, 0, 0.3, 0, 0, 0.4, 0, 0, 0.6, 1, 1, 1, 0.9, 0.9, 0.9, 0.8, 0.8, 0.8, 0.7, 0.7, 0.7, 0.6, 0.6, 0.6, 0.5, 0.5, 0.5, 0.4, 0.4, 0.4, 0.3, 0.3, 0.3, 0.2, 0.2, 0.2, 0.1, 0.1, 0.1, 0, 0, 0, 1, 1, 0.5, 0.5, 0.5, 1, 0.5, 0.5, 0.9, 0.9, 0, 0, 0.8, 0, 0, 0.7, 0, 0, 0.6, 0, 0, 0.5, 0, 0, 0.4, 0, 0, 0.3, 0, 0, 0.2, 0, 0, 0.1, 0, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h2yge"]
+shader = ExtResource("1_0xm2m")
+shader_parameter/distortion_chance = 20.465
+shader_parameter/distortion_distance = 1.0
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_h2yge"]
 
 [node name="Node3D" type="Node3D"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(11.44, 0, 0, 0, 0.24, 0, 0, 0, 11.625, -0.215008, -0.660271, -0.616922)
+transform = Transform3D(4.576, 0, 0, 0, 0.510841, 0, 0, 0, 2.325, -0.215008, -0.0582814, -3.8718)
 mesh = SubResource("BoxMesh_7dm0k")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(4.576, 0, 0, 0, 0.510841, 0, 0, 0, 2.325, -2.89971, -0.0582814, -1.13306)
+mesh = SubResource("BoxMesh_7mycd")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(11.3764, 0, 0, 0, 0.238665, 0, 0, 0, 11.5603, -0.215008, -0.660271, -0.616922)
+mesh = SubResource("BoxMesh_lquwl")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.91935, 0)
@@ -34,6 +60,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.91935, 2.19592)
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
 material = SubResource("ShaderMaterial_0xm2m")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_right = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer2"]
+material = SubResource("ShaderMaterial_h2yge")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
